@@ -1,5 +1,6 @@
 #!/bin/sh
-# Custom entrypoint: inject proxy settings into SearXNG settings.yml if SEARXNG_PROXY_URL is set
+# Custom entrypoint: inject proxy settings into SearXNG settings.yml
+# SEARXNG_PROXY_URL is required for stable search performance.
 
 SETTINGS_FILE="/etc/searxng/settings.yml"
 
@@ -12,7 +13,9 @@ if [ -n "$SEARXNG_PROXY_URL" ]; then
 EOF
   echo "[entrypoint] Proxy configuration added to settings.yml"
 else
-  echo "[entrypoint] No SEARXNG_PROXY_URL set, running without proxy"
+  echo "[entrypoint] WARNING: SEARXNG_PROXY_URL is not set."
+  echo "[entrypoint] Search performance will be severely degraded without a proxy."
+  echo "[entrypoint] Set SEARXNG_PROXY_URL in .env.local (see .env.example)."
 fi
 
 # Run the original SearXNG entrypoint

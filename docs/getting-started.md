@@ -43,6 +43,9 @@ OPENAI_API_KEY=sk-your-openai-key
 SEARXNG_URL=http://localhost:8080
 CRAWL4AI_URL=http://localhost:11235
 PISTON_URL=http://localhost:2000
+
+# SearXNG outbound proxy (required for stable search performance)
+SEARXNG_PROXY_URL=http://user:pass@proxy-host:port
 ```
 
 The provider is auto-detected from whichever API key is present. See [providers.md](./providers.md) for details on provider priority and configuration.

@@ -88,7 +88,9 @@ Edit `docker/searxng/settings.yml` to:
 - Adjust timeout settings
 - Configure an outbound proxy
 
-**Outbound proxy** (optional, for avoiding rate limits from upstream search engines):
+**Outbound proxy** (required for stable search performance):
+
+Without a proxy, upstream search engines (Google, Bing, etc.) will rate-limit requests, causing frequent timeouts. A proxy is required for reliable operation.
 
 ```bash
 # In .env.local
@@ -277,15 +279,16 @@ The maximum execution timeout is 3000 ms (3 seconds) for both compilation and ex
 ### SearXNG: no results or empty responses
 
 - Check that SearXNG is running: `curl http://localhost:8080/`
-- Upstream search engines may be rate-limiting your requests. Consider configuring an outbound proxy in `.env.local`:
+- Upstream search engines are likely rate-limiting your requests. Ensure `SEARXNG_PROXY_URL` is set in `.env.local`:
   ```bash
   SEARXNG_PROXY_URL=socks5h://user:pass@proxy:port
   ```
+  A proxy is required for stable search performance. Without it, most queries will timeout.
 - Check `docker/searxng/settings.yml` to ensure at least some search engines are enabled.
 
 ### SearXNG: rate limit errors
 
-The rate limiter is disabled for local development. If you see 429 errors, it may be from upstream search engines, not SearXNG itself. An outbound proxy can help.
+The rate limiter is disabled for local development. If you see 429 errors, it may be from upstream search engines, not SearXNG itself. Ensure `SEARXNG_PROXY_URL` is properly configured in `.env.local`.
 
 ### Crawl4AI: scraping failures
 

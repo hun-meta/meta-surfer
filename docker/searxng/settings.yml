@@ -74,8 +74,9 @@ outgoing:
   useragent_suffix: ""
   pool_connections: 100
   pool_maxsize: 20
-  # Proxy configuration (optional):
-  # Set SEARXNG_PROXY_URL in .env.local, then uncomment below:
+  # Proxy configuration:
+  # SEARXNG_PROXY_URL is required for stable search performance.
+  # Set it in .env.local — the entrypoint.sh script injects it automatically at startup.
   # proxies:
   #   all://:
   #     - ${SEARXNG_PROXY_URL}
