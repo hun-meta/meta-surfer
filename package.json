@@ -1,7 +1,7 @@
 {
   "name": "web-surfer",
-  "version": "0.2.0",
-  "description": "AI-powered web search engine — CLI, library, and optional web UI",
+  "version": "0.1.0",
+  "description": "AI-powered web search engine — CLI, library, and optional web UI. Self-hosted Perplexity alternative with multi-provider LLM support.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,8 +17,37 @@
   "files": [
     "dist",
     "bin",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
+  "keywords": [
+    "ai",
+    "search",
+    "perplexity",
+    "web-search",
+    "cli",
+    "openai",
+    "anthropic",
+    "google",
+    "gemini",
+    "grok",
+    "self-hosted",
+    "searxng",
+    "vercel-ai-sdk"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hun-meta/web-surfer.git"
+  },
+  "homepage": "https://github.com/hun-meta/web-surfer#readme",
+  "bugs": {
+    "url": "https://github.com/hun-meta/web-surfer/issues"
+  },
+  "author": "hun-meta",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build:lib": "tsup",
     "build:web": "next build",
@@ -26,7 +55,8 @@
     "dev": "next dev",
     "dev:cli": "tsx src/cli.ts",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepublishOnly": "npm run build:lib"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.12",

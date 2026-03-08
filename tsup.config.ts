@@ -11,7 +11,7 @@ export default defineConfig([
     clean: true,
     sourcemap: true,
     target: "node20",
-    external: ["ai", "@ai-sdk/openai", "zod"],
+    external: ["ai", "@ai-sdk/openai", "@ai-sdk/google", "@ai-sdk/anthropic", "@ai-sdk/xai", "zod"],
   },
   // CLI build
   {
@@ -21,6 +21,6 @@ export default defineConfig([
     outDir: "dist",
     sourcemap: true,
     target: "node20",
-    external: ["ai", "@ai-sdk/openai", "zod", "commander", "dotenv"],
+    external: ["ai", "@ai-sdk/openai", "@ai-sdk/google", "@ai-sdk/anthropic", "@ai-sdk/xai", "zod", "commander", "dotenv"],
   },
 ]);

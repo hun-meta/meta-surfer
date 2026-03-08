@@ -46,9 +46,14 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - ZAI_API_KEY=${ZAI_API_KEY}
+      - LLM_PROVIDER=${LLM_PROVIDER:-}
+      - LLM_MODEL=${LLM_MODEL:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - XAI_API_KEY=${XAI_API_KEY:-}
+      - ZAI_API_KEY=${ZAI_API_KEY:-}
       - ZAI_BASE_URL=${ZAI_BASE_URL:-https://api.z.ai/api/coding/paas/v4}
-      - ZAI_MODEL=${ZAI_MODEL:-glm-5}
       - SEARXNG_URL=http://searxng:8080
       - CRAWL4AI_URL=http://crawl4ai:11235
       - PISTON_URL=http://piston:2000
