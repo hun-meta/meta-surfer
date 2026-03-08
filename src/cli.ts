@@ -10,8 +10,8 @@ import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import type { SearchMode, LLMProvider } from "./core/types";
 
-// Auto-load .env.local (Next.js convention) and .env
-const projectRoot = resolve(import.meta.dirname, "..");
+// Auto-load .env.local (Next.js convention) and .env from the user's working directory
+const projectRoot = process.cwd();
 for (const envFile of [".env.local", ".env"]) {
   const envPath = resolve(projectRoot, envFile);
   if (existsSync(envPath)) {

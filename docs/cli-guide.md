@@ -339,12 +339,14 @@ See the [Web UI Guide](./web-ui-guide.md) for more details.
 
 ## Environment Variable Loading
 
-The CLI automatically loads environment variables from these files (in order) relative to the project root:
+The CLI automatically loads environment variables from these files (in order) relative to the **current working directory** (where you run the command):
 
 1. `.env.local` (Next.js convention, higher priority)
 2. `.env`
 
 Variables from `.env.local` take precedence over `.env`. Both files are optional.
+
+When installed globally or via npm, place your `.env.local` in the directory where you invoke `meta-surfer`.
 
 ## Exit Codes
 
