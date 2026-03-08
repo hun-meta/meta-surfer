@@ -1,16 +1,12 @@
-export interface SearchResult {
-  title: string;
-  url: string;
-  content: string;
-  favicon?: string;
-}
-
-export interface SearchQueryResult {
-  query: string;
-  results: SearchResult[];
-}
-
-export interface MultiSearchResponse {
-  searches: SearchQueryResult[];
-  totalResults: number;
-}
+export type {
+  SearchResult,
+  SearchQueryResult,
+  MultiSearchResponse,
+  ScrapeResult,
+  ExecuteResult,
+  ResearchResult,
+  ResearchPlan,
+  CodeResult,
+  SearchMode,
+  WebSurferConfig,
+} from "../src/core/types";

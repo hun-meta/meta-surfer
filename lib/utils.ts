@@ -1,19 +1,10 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+// cn() is UI-specific (tailwind), keep it here
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function truncate(str: string, maxLength: number): string {
-  if (str.length <= maxLength) return str;
-  return str.slice(0, maxLength) + "...";
-}
-
-export function extractDomain(url: string): string {
-  try {
-    return new URL(url).hostname.replace("www.", "");
-  } catch {
-    return url;
-  }
-}
+// Re-export core utils
+export { truncate, extractDomain } from "../src/core/utils";

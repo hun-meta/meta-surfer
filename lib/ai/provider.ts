@@ -1,12 +1,5 @@
-import { createOpenAI } from "@ai-sdk/openai";
+export { createProvider as zai, getModel, configure, getConfig } from "../../src/core/provider";
 
-export const zai = createOpenAI({
-  baseURL: process.env.ZAI_BASE_URL || "https://api.z.ai/api/coding/paas/v4",
-  apiKey: process.env.ZAI_API_KEY || "",
-  compatibility: "compatible",
-});
-
-export function getModel() {
-  const modelId = process.env.ZAI_MODEL || "glm-4-plus";
-  return zai(modelId);
-}
+// Re-export for backwards compatibility with existing Next.js code
+import { createProvider } from "../../src/core/provider";
+export const zai_default = createProvider();

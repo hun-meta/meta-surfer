@@ -1,24 +1,4 @@
 services:
-  # Next.js Web Application (Agent Orchestration + UI)
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - ZAI_API_KEY=${ZAI_API_KEY}
-      - ZAI_BASE_URL=${ZAI_BASE_URL:-https://api.z.ai/api/coding/paas/v4}
-      - ZAI_MODEL=${ZAI_MODEL:-glm-5}
-      - SEARXNG_URL=http://searxng:8080
-      - CRAWL4AI_URL=http://crawl4ai:11235
-      - PISTON_URL=http://piston:2000
-    depends_on:
-      - searxng
-      - crawl4ai
-      - piston
-    restart: unless-stopped
-
   # SearXNG - Meta Search Engine
   searxng:
     image: searxng/searxng:latest
@@ -55,6 +35,28 @@ services:
       - /piston/jobs:exec,size=256m
     volumes:
       - piston-packages:/piston/packages
+
+  # Next.js Web UI (optional — use `docker compose --profile web up` to include)
+  web:
+    profiles:
+      - web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - ZAI_API_KEY=${ZAI_API_KEY}
+      - ZAI_BASE_URL=${ZAI_BASE_URL:-https://api.z.ai/api/coding/paas/v4}
+      - ZAI_MODEL=${ZAI_MODEL:-glm-5}
+      - SEARXNG_URL=http://searxng:8080
+      - CRAWL4AI_URL=http://crawl4ai:11235
+      - PISTON_URL=http://piston:2000
+    depends_on:
+      - searxng
+      - crawl4ai
+      - piston
+    restart: unless-stopped
 
 volumes:
   piston-packages:
