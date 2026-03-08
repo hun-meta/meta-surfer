@@ -50,12 +50,16 @@ export interface CodeResult {
 
 export type SearchMode = "web" | "extreme";
 
+export type LLMProvider = "openai" | "google" | "anthropic" | "xai" | "zai";
+
 export interface WebSurferConfig {
-  /** Z.AI or OpenAI-compatible API base URL */
+  /** LLM provider: openai, google, anthropic, xai, zai (default: auto-detect from env) */
+  provider?: LLMProvider;
+  /** API base URL (only needed for OpenAI-compatible / ZAI) */
   baseURL?: string;
-  /** API key */
+  /** API key (falls back to provider-specific env var) */
   apiKey?: string;
-  /** Model ID (default: glm-4-plus) */
+  /** Model ID (defaults per provider: gpt-5.1-chat-latest, gemini-3.1-flash, claude-opus-4.6, grok-4.1, glm-5) */
   model?: string;
   /** SearXNG service URL */
   searxngURL?: string;

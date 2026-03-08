@@ -8,7 +8,7 @@ import { extremeSearch } from "./tools/extreme-search";
 import { ask } from "./engine";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
-import type { SearchMode } from "./core/types";
+import type { SearchMode, LLMProvider } from "./core/types";
 
 // Auto-load .env.local (Next.js convention) and .env
 const projectRoot = resolve(import.meta.dirname, "..");
@@ -19,8 +19,9 @@ for (const envFile of [".env.local", ".env"]) {
   }
 }
 
-function loadConfig(opts: { baseUrl?: string; apiKey?: string; model?: string; searxng?: string; crawl4ai?: string; piston?: string }) {
+function loadConfig(opts: { provider?: string; baseUrl?: string; apiKey?: string; model?: string; searxng?: string; crawl4ai?: string; piston?: string }) {
   configure({
+    provider: opts.provider as LLMProvider | undefined,
     baseURL: opts.baseUrl,
     apiKey: opts.apiKey,
     model: opts.model,
@@ -38,6 +39,7 @@ program
   .name("web-surfer")
   .description("AI-powered web search engine — CLI & library")
   .version(pkg.version)
+  .option("--provider <name>", "LLM provider: openai, google, anthropic, xai, zai (default: auto-detect)")
   .option("--base-url <url>", "LLM API base URL")
   .option("--api-key <key>", "LLM API key")
   .option("--model <id>", "Model ID")

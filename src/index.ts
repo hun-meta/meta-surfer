@@ -1,5 +1,5 @@
 // Core
-export { configure, getModel, createProvider, getConfig } from "./core/provider";
+export { configure, getModel, getConfig, detectProvider, isOpenAICompatible } from "./core/provider";
 export type {
   SearchResult,
   SearchQueryResult,
@@ -10,6 +10,7 @@ export type {
   ResearchPlan,
   CodeResult,
   SearchMode,
+  LLMProvider,
   WebSurferConfig,
 } from "./core/types";
 export { truncate, extractDomain } from "./core/utils";

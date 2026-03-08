@@ -7,7 +7,7 @@ import {
   type CoreMessage,
 } from "ai";
 import { z } from "zod";
-import { getModel } from "./core/provider";
+import { getModel, isOpenAICompatible } from "./core/provider";
 import { markdownJoinerTransform } from "./core/parser";
 import { searchMultiQuery, deduplicateAcrossQueries } from "./tools/web-search";
 import { scrapeUrls } from "./tools/web-scrape";
@@ -256,9 +256,9 @@ export function chat(options: {
       }
     },
 
-    providerOptions: {
-      openaiCompatible: { parallelToolCalls: false },
-    },
+    ...(isOpenAICompatible()
+      ? { providerOptions: { openaiCompatible: { parallelToolCalls: false } } }
+      : {}),
 
     onChunk(event) {
       if (event.chunk.type === "tool-call") {
@@ -288,9 +288,9 @@ export async function ask(options: {
     experimental_activeTools: [...activeToolNames],
     maxSteps: mode === "extreme" ? 3 : 5,
 
-    providerOptions: {
-      openaiCompatible: { parallelToolCalls: false },
-    },
+    ...(isOpenAICompatible()
+      ? { providerOptions: { openaiCompatible: { parallelToolCalls: false } } }
+      : {}),
   });
 
   return result.text;
