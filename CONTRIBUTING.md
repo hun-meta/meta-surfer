@@ -100,11 +100,9 @@ npm run lint
 
 ## Commit Convention
 
-This project uses a **Korean-language commit convention**. All commit messages (type, scope, subject, and body) are written in Korean.
+All commit messages must be written in **English** following the [Conventional Commits](https://www.conventionalcommits.org/) style.
 
 See [docs/commit-convention.md](docs/commit-convention.md) for the full specification, including commit types, scope naming, and formatting rules.
-
-If you are not comfortable writing in Korean, write your commit message in English and note it in the PR description. The maintainer will adjust it during the merge.
 
 ## Pull Request Guidelines
 
