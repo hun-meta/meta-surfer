@@ -1,0 +1,60 @@
+services:
+  # Next.js Web Application (Agent Orchestration + UI)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - ZAI_API_KEY=${ZAI_API_KEY}
+      - ZAI_BASE_URL=${ZAI_BASE_URL:-https://api.z.ai/api/coding/paas/v4}
+      - ZAI_MODEL=${ZAI_MODEL:-glm-5}
+      - SEARXNG_URL=http://searxng:8080
+      - CRAWL4AI_URL=http://crawl4ai:11235
+      - PISTON_URL=http://piston:2000
+    depends_on:
+      - searxng
+      - crawl4ai
+      - piston
+    restart: unless-stopped
+
+  # SearXNG - Meta Search Engine
+  searxng:
+    image: searxng/searxng:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/searxng/settings.yml:/etc/searxng/settings.yml
+      - ./docker/searxng/limiter.toml:/etc/searxng/limiter.toml:ro
+      - ./docker/searxng/entrypoint.sh:/usr/local/bin/custom-entrypoint.sh:ro
+    entrypoint: /usr/local/bin/custom-entrypoint.sh
+    env_file:
+      - .env.local
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+    restart: unless-stopped
+
+  # Crawl4AI - Web Scraping Service
+  crawl4ai:
+    image: unclecode/crawl4ai:latest
+    ports:
+      - "11235:11235"
+    environment:
+      - CRAWL4AI_API_TOKEN=""
+      - MAX_CONCURRENT_TASKS=5
+    restart: unless-stopped
+
+  # Piston - Code Execution Sandbox
+  piston:
+    image: ghcr.io/engineer-man/piston:latest
+    privileged: true
+    ports:
+      - "2000:2000"
+    tmpfs:
+      - /piston/jobs:exec,size=256m
+    volumes:
+      - piston-packages:/piston/packages
+
+volumes:
+  piston-packages:

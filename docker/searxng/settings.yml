@@ -1,0 +1,79 @@
+use_default_settings: true
+
+general:
+  debug: false
+  instance_name: "Web Surfer Search"
+  privacypolicy_url: false
+  donation_url: false
+  contact_url: false
+  enable_metrics: false
+
+search:
+  safe_search: 0
+  autocomplete: "google"
+  default_lang: "auto"
+  formats:
+    - html
+    - json
+
+server:
+  port: 8080
+  bind_address: "0.0.0.0"
+  secret_key: "web-surfer-searxng-secret-change-me"
+  limiter: false
+  image_proxy: false
+  method: "GET"
+
+ui:
+  static_use_hash: true
+  default_theme: simple
+  theme_args:
+    simple_style: dark
+
+engines:
+  - name: google
+    engine: google
+    shortcut: g
+    disabled: false
+    use_mobile_ui: true
+
+  - name: bing
+    engine: bing
+    shortcut: b
+    disabled: false
+
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: d
+    disabled: false
+    timeout: 10.0
+
+  - name: qwant
+    engine: qwant
+    shortcut: q
+    disabled: false
+
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: w
+    disabled: false
+
+  - name: arxiv
+    engine: arxiv
+    shortcut: ar
+    disabled: false
+
+  - name: google news
+    engine: google_news
+    shortcut: gn
+    disabled: false
+
+outgoing:
+  request_timeout: 10.0
+  max_request_timeout: 30.0
+  useragent_suffix: ""
+  pool_connections: 100
+  pool_maxsize: 20
+  proxies:
+    all://:
+      - ***REDACTED***
