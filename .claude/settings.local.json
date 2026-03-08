@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yt-dlp:*)",
+      "Bash(docker:*)",
+      "Bash(tesseract:*)",
+      "Bash(npm list:*)",
+      "Bash(npm view:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(mv:*)",
+      "Bash(mkdir:*)",
+      "Bash(git:*)",
+      "Bash(gh repo:*)"
+    ]
+  }
+}
