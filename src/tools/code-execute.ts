@@ -3,9 +3,9 @@ import { getConfig } from "../core/provider";
 
 const LANGUAGE_MAP: Record<string, { piston: string; version: string }> = {
   python: { piston: "python", version: "3.10.0" },
-  javascript: { piston: "node", version: "18.15.0" },
-  js: { piston: "node", version: "18.15.0" },
-  node: { piston: "node", version: "18.15.0" },
+  javascript: { piston: "javascript", version: "18.15.0" },
+  js: { piston: "javascript", version: "18.15.0" },
+  node: { piston: "javascript", version: "18.15.0" },
   typescript: { piston: "typescript", version: "5.0.3" },
   ts: { piston: "typescript", version: "5.0.3" },
   bash: { piston: "bash", version: "5.2.0" },
