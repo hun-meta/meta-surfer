@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide walks you through setting up Web Surfer from scratch -- from installing prerequisites to running your first AI-powered search query.
+This guide walks you through setting up Meta Surfer from scratch -- from installing prerequisites to running your first AI-powered search query.
 
 ## Prerequisites
 
@@ -11,8 +11,8 @@ This guide walks you through setting up Web Surfer from scratch -- from installi
 ## Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/web-surfer.git
-cd web-surfer
+git clone https://github.com/your-org/meta-surfer.git
+cd meta-surfer
 ```
 
 ## Step 2: Install Dependencies
@@ -108,7 +108,7 @@ npx tsx src/cli.ts ask "What is the current weather in Tokyo?"
 Or using the built CLI:
 
 ```bash
-node bin/web-surfer.mjs ask "What is the current weather in Tokyo?"
+node bin/meta-surfer.mjs ask "What is the current weather in Tokyo?"
 ```
 
 You should see the AI search the web via SearXNG, read relevant pages, and return a sourced answer.
@@ -134,7 +134,7 @@ See the [CLI Guide](./cli-guide.md) for the full command reference.
 ## What's Next
 
 - [CLI Guide](./cli-guide.md) -- complete CLI command and option reference
-- [Library Guide](./library-guide.md) -- use Web Surfer as an npm package in your own projects
+- [Library Guide](./library-guide.md) -- use Meta Surfer as an npm package in your own projects
 - [Providers](./providers.md) -- configure different LLM providers
 - [Web UI Guide](./web-ui-guide.md) -- run the optional browser-based interface
 - [Docker Setup](./docker-setup.md) -- detailed service configuration and troubleshooting

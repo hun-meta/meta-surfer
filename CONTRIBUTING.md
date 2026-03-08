@@ -1,6 +1,6 @@
-# Contributing to Web Surfer
+# Contributing to Meta Surfer
 
-Thank you for your interest in contributing to Web Surfer. This guide covers everything you need to get started.
+Thank you for your interest in contributing to Meta Surfer. This guide covers everything you need to get started.
 
 ## Table of Contents
 
@@ -17,8 +17,8 @@ Thank you for your interest in contributing to Web Surfer. This guide covers eve
 1. **Fork** the repository on GitHub.
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/<your-username>/web-surfer.git
-   cd web-surfer
+   git clone https://github.com/<your-username>/meta-surfer.git
+   cd meta-surfer
    ```
 3. **Create a branch** from `dev` for your changes:
    ```bash
@@ -57,7 +57,7 @@ npm install
 
 ### External Services
 
-Web Surfer depends on several external services managed via Docker Compose:
+Meta Surfer depends on several external services managed via Docker Compose:
 
 ```bash
 # Start core services (SearXNG, Crawl4AI, Piston)

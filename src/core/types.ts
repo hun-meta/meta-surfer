@@ -52,7 +52,7 @@ export type SearchMode = "web" | "extreme";
 
 export type LLMProvider = "openai" | "google" | "anthropic" | "xai" | "zai";
 
-export interface WebSurferConfig {
+export interface MetaSurferConfig {
   /** LLM provider: openai, google, anthropic, xai, zai (default: auto-detect from env) */
   provider?: LLMProvider;
   /** API base URL (only needed for OpenAI-compatible / ZAI) */

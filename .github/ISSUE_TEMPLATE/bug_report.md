@@ -26,7 +26,7 @@ A clear and concise description of what you expected to happen.
 
 - **OS**: (e.g., macOS 15, Ubuntu 24.04, Windows 11)
 - **Node.js version**: (e.g., 20.11.0)
-- **web-surfer version**: (e.g., 0.1.0)
+- **meta-surfer version**: (e.g., 0.1.0)
 - **LLM provider**: (e.g., OpenAI, ZAI, Anthropic)
 - **Usage mode**: (CLI / Library / Web UI)
 

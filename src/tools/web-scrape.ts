@@ -70,7 +70,7 @@ async function enhancedFetch(url: string): Promise<ScrapeResult> {
   const response = await fetch(url, {
     headers: {
       "User-Agent":
-        "Mozilla/5.0 (compatible; WebSurfer/1.0; +http://localhost)",
+        "Mozilla/5.0 (compatible; MetaSurfer/1.0; +http://localhost)",
       Accept: "text/html,application/xhtml+xml",
     },
     signal: AbortSignal.timeout(8000),

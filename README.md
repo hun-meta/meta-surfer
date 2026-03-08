@@ -1,8 +1,8 @@
-# Web Surfer
+# Meta Surfer
 
 A self-hosted, AI-powered web search engine. An open-source alternative to Perplexity that runs entirely on your own infrastructure.
 
-[![npm version](https://img.shields.io/npm/v/web-surfer)](https://www.npmjs.com/package/web-surfer)
+[![npm version](https://img.shields.io/npm/v/meta-surfer)](https://www.npmjs.com/package/meta-surfer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
 
@@ -19,8 +19,8 @@ A self-hosted, AI-powered web search engine. An open-source alternative to Perpl
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/hun-meta/web-surfer.git
-cd web-surfer
+git clone https://github.com/hun-meta/meta-surfer.git
+cd meta-surfer
 npm install
 
 # 2. Configure your LLM provider
@@ -38,13 +38,13 @@ npx tsx src/cli.ts ask "What is the current population of Tokyo?"
 
 ```bash
 # As a project dependency
-npm install web-surfer
+npm install meta-surfer
 
 # Global install for CLI usage
-npm install -g web-surfer
+npm install -g meta-surfer
 ```
 
-After global install, the `web-surfer` command is available system-wide.
+After global install, the `meta-surfer` command is available system-wide.
 
 ## Configuration
 
@@ -73,28 +73,28 @@ You can also set `LLM_PROVIDER` and `LLM_MODEL` explicitly to override auto-dete
 
 ```bash
 # AI-powered search
-web-surfer ask "How does photosynthesis work?"
+meta-surfer ask "How does photosynthesis work?"
 
 # Deep research mode
-web-surfer ask "Compare React and Vue in 2025" --mode extreme
+meta-surfer ask "Compare React and Vue in 2025" --mode extreme
 
 # Stream the response
-web-surfer ask "Latest news on SpaceX" --stream
+meta-surfer ask "Latest news on SpaceX" --stream
 
 # Raw web search (no AI)
-web-surfer search "TypeScript 5.7 release notes" -n 5
+meta-surfer search "TypeScript 5.7 release notes" -n 5
 
 # Scrape a web page
-web-surfer scrape https://example.com --json
+meta-surfer scrape https://example.com --json
 
 # Execute code in a sandbox
-web-surfer execute python -c "print(sum(range(100)))"
+meta-surfer execute python -c "print(sum(range(100)))"
 
 # Deep autonomous research
-web-surfer research "Impact of AI on healthcare" --ai
+meta-surfer research "Impact of AI on healthcare" --ai
 
 # Start the web UI
-web-surfer serve --port 3000
+meta-surfer serve --port 3000
 ```
 
 Global options (`--provider`, `--base-url`, `--api-key`, `--model`, `--searxng`, `--crawl4ai`, `--piston`) can be passed before any command to override environment configuration.
@@ -102,7 +102,7 @@ Global options (`--provider`, `--base-url`, `--api-key`, `--model`, `--searxng`,
 ### Library
 
 ```typescript
-import { configure, ask, chat } from "web-surfer";
+import { configure, ask, chat } from "meta-surfer";
 
 // Configure the provider (or rely on env vars)
 configure({
@@ -156,7 +156,7 @@ Set one or more API keys in your `.env.local`. The provider is auto-detected fro
 
 ## Architecture
 
-Web Surfer chains three self-hosted services with an LLM to answer questions:
+Meta Surfer chains three self-hosted services with an LLM to answer questions:
 
 ```
 User Query

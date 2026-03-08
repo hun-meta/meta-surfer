@@ -8,5 +8,5 @@ export type {
   ResearchPlan,
   CodeResult,
   SearchMode,
-  WebSurferConfig,
+  MetaSurferConfig,
 } from "../src/core/types";

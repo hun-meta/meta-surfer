@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Web Surfer - AI Search Engine",
+  title: "Meta Surfer - AI Search Engine",
   description: "Self-hosted AI-powered search engine with real-time answers",
 };
 

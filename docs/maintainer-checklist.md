@@ -1,6 +1,6 @@
 # Maintainer Checklist
 
-`web-surfer` 오픈소스 npm 프로젝트 유지관리를 위한 필수 체크리스트.
+`meta-surfer` 오픈소스 npm 프로젝트 유지관리를 위한 필수 체크리스트.
 
 ---
 
@@ -169,10 +169,10 @@ git push origin main
 npm whoami
 
 # 패키지명 사용 가능 여부 확인
-npm view web-surfer
+npm view meta-surfer
 
 # scoped 패키지로 변경이 필요할 수 있음
-# 예: @hun-meta/web-surfer
+# 예: @hun-meta/meta-surfer
 
 # 첫 퍼블리시 (public 접근 필수 지정)
 npm publish --access public
@@ -326,10 +326,10 @@ npm pack --dry-run
 npm pack
 mkdir /tmp/test-install && cd /tmp/test-install
 npm init -y
-npm install /path/to/web-surfer-0.2.0.tgz
+npm install /path/to/meta-surfer-0.2.0.tgz
 
 # 실제 import 테스트
-node -e "import('web-surfer').then(m => console.log(Object.keys(m)))"
+node -e "import('meta-surfer').then(m => console.log(Object.keys(m)))"
 ```
 
 ### ESM 호환성

@@ -36,7 +36,7 @@ const program = new Command();
 const pkg = JSON.parse(readFileSync(resolve(import.meta.dirname, "../package.json"), "utf-8"));
 
 program
-  .name("web-surfer")
+  .name("meta-surfer")
   .description("AI-powered web search engine — CLI & library")
   .version(pkg.version)
   .option("--provider <name>", "LLM provider: openai, google, anthropic, xai, zai (default: auto-detect)")
@@ -224,14 +224,14 @@ program
     process.env.PORT = opts.port;
 
     if (opts.dev) {
-      console.log(`Starting Web Surfer dev server on port ${opts.port}...`);
+      console.log(`Starting Meta Surfer dev server on port ${opts.port}...`);
       execSync(`npx next dev -p ${opts.port}`, {
         cwd: projectRoot,
         stdio: "inherit",
         env: { ...process.env },
       });
     } else {
-      console.log(`Starting Web Surfer on port ${opts.port}...`);
+      console.log(`Starting Meta Surfer on port ${opts.port}...`);
       console.log("Building Next.js app...");
       execSync("npx next build", {
         cwd: projectRoot,

@@ -1,6 +1,6 @@
 # Docker Setup
 
-Web Surfer relies on three external services for search, scraping, and code execution. All three run via Docker Compose.
+Meta Surfer relies on three external services for search, scraping, and code execution. All three run via Docker Compose.
 
 ## Service Overview
 
@@ -131,7 +131,7 @@ The Crawl4AI `/crawl` endpoint expects URLs as an **array**, not a string:
 }
 ```
 
-Web Surfer handles this automatically, but be aware if making direct API calls.
+Meta Surfer handles this automatically, but be aware if making direct API calls.
 
 **Verify Crawl4AI:**
 
@@ -165,7 +165,7 @@ piston:
     - piston-packages:/piston/packages # Persistent language runtime storage
 ```
 
-**Execution limits** (set by Web Surfer in each request):
+**Execution limits** (set by Meta Surfer in each request):
 
 | Limit             | Value   |
 |-------------------|---------|
@@ -195,7 +195,7 @@ curl -X POST http://localhost:2000/api/v2/packages \
   -d '{"language": "typescript", "version": "5.0.3"}'
 ```
 
-Available runtimes used by Web Surfer:
+Available runtimes used by Meta Surfer:
 
 | Language    | Piston Name  | Version  |
 |-------------|-------------|----------|
@@ -268,7 +268,7 @@ On some systems (e.g., rootless Docker), privileged mode may not be available. I
 
 Piston ships without any language runtimes installed. You must install them after starting the container. See the "Installing language runtimes" section above.
 
-Note: The JavaScript runtime in Piston is named `node`, not `javascript`. Web Surfer maps `javascript` and `js` to `node` automatically.
+Note: The JavaScript runtime in Piston is named `node`, not `javascript`. Meta Surfer maps `javascript` and `js` to `node` automatically.
 
 ### Piston: "execution timed out"
 

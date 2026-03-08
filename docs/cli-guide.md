@@ -1,6 +1,6 @@
 # CLI Guide
 
-Complete reference for the `web-surfer` command-line interface.
+Complete reference for the `meta-surfer` command-line interface.
 
 ## Installation
 
@@ -11,11 +11,11 @@ npm install
 npm run build:lib
 ```
 
-The CLI is available as `web-surfer` (via the `bin/web-surfer.mjs` shebang wrapper) or through the development runner:
+The CLI is available as `meta-surfer` (via the `bin/meta-surfer.mjs` shebang wrapper) or through the development runner:
 
 ```bash
 # Via built CLI
-node bin/web-surfer.mjs <command>
+node bin/meta-surfer.mjs <command>
 
 # Via development runner (no build needed)
 npx tsx src/cli.ts <command>
@@ -29,7 +29,7 @@ npm run dev:cli -- <command>
 These options apply to all commands and must be placed **before** the command name:
 
 ```
-web-surfer [global-options] <command> [command-options]
+meta-surfer [global-options] <command> [command-options]
 ```
 
 | Option            | Description                                        | Default            |
@@ -47,7 +47,7 @@ web-surfer [global-options] <command> [command-options]
 ### Example: Override provider
 
 ```bash
-web-surfer --provider openai --model gpt-4o ask "What is Rust?"
+meta-surfer --provider openai --model gpt-4o ask "What is Rust?"
 ```
 
 ---
@@ -59,7 +59,7 @@ web-surfer --provider openai --model gpt-4o ask "What is Rust?"
 Ask a question with AI-powered web search. The AI automatically searches the web, reads relevant pages, and synthesizes an answer with source citations.
 
 ```
-web-surfer ask [options] <query...>
+meta-surfer ask [options] <query...>
 ```
 
 **Arguments:**
@@ -84,16 +84,16 @@ web-surfer ask [options] <query...>
 
 ```bash
 # Basic question
-web-surfer ask "What is quantum computing?"
+meta-surfer ask "What is quantum computing?"
 
 # Stream the response
-web-surfer ask --stream "Latest news about SpaceX"
+meta-surfer ask --stream "Latest news about SpaceX"
 
 # Deep research mode
-web-surfer ask --mode extreme "Compare React, Vue, and Svelte performance in 2025"
+meta-surfer ask --mode extreme "Compare React, Vue, and Svelte performance in 2025"
 
 # Multi-word queries work naturally
-web-surfer ask what is the tallest building in the world
+meta-surfer ask what is the tallest building in the world
 ```
 
 ---
@@ -103,7 +103,7 @@ web-surfer ask what is the tallest building in the world
 Search the web via SearXNG without any AI processing. Returns raw search results.
 
 ```
-web-surfer search [options] <query...>
+meta-surfer search [options] <query...>
 ```
 
 **Arguments:**
@@ -123,13 +123,13 @@ web-surfer search [options] <query...>
 
 ```bash
 # Basic search
-web-surfer search "TypeScript 5.0 features"
+meta-surfer search "TypeScript 5.0 features"
 
 # Limit to 5 results
-web-surfer search -n 5 "best static site generators"
+meta-surfer search -n 5 "best static site generators"
 
 # JSON output (useful for piping)
-web-surfer search --json "Node.js 22" | jq '.searches[0].results[:3]'
+meta-surfer search --json "Node.js 22" | jq '.searches[0].results[:3]'
 ```
 
 **Output format (text):**
@@ -149,7 +149,7 @@ TypeScript 5.0 Announcement
 Scrape web page content using Crawl4AI (with an automatic fallback to a built-in HTML fetcher).
 
 ```
-web-surfer scrape [options] <urls...>
+meta-surfer scrape [options] <urls...>
 ```
 
 **Arguments:**
@@ -168,13 +168,13 @@ web-surfer scrape [options] <urls...>
 
 ```bash
 # Scrape a single page
-web-surfer scrape https://example.com
+meta-surfer scrape https://example.com
 
 # Scrape multiple pages
-web-surfer scrape https://example.com https://example.org
+meta-surfer scrape https://example.com https://example.org
 
 # JSON output
-web-surfer scrape --json https://news.ycombinator.com
+meta-surfer scrape --json https://news.ycombinator.com
 ```
 
 **Output format (text):**
@@ -193,7 +193,7 @@ This domain is for use in illustrative examples...
 Execute code in a sandboxed environment via Piston. Supports multiple programming languages.
 
 ```
-web-surfer execute [options] <language>
+meta-surfer execute [options] <language>
 ```
 
 **Arguments:**
@@ -231,16 +231,16 @@ You must provide either `--code` or `--file`. The process exits with code 0 on s
 
 ```bash
 # Inline Python
-web-surfer execute python -c "print(sum(range(100)))"
+meta-surfer execute python -c "print(sum(range(100)))"
 
 # From a file
-web-surfer execute javascript -f script.js
+meta-surfer execute javascript -f script.js
 
 # JSON output
-web-surfer execute --json python -c "import sys; print(sys.version)"
+meta-surfer execute --json python -c "import sys; print(sys.version)"
 
 # TypeScript
-web-surfer execute ts -c "const x: number = 42; console.log(x)"
+meta-surfer execute ts -c "const x: number = 42; console.log(x)"
 ```
 
 **Notes:**
@@ -254,7 +254,7 @@ web-surfer execute ts -c "const x: number = 42; console.log(x)"
 Perform deep autonomous research on a topic. This command runs the extreme search pipeline directly: it creates a research plan, executes multiple searches, reads key pages, and optionally runs code for data analysis.
 
 ```
-web-surfer research [options] <query...>
+meta-surfer research [options] <query...>
 ```
 
 **Arguments:**
@@ -274,13 +274,13 @@ web-surfer research [options] <query...>
 
 ```bash
 # Raw research results (plan, sources, code results)
-web-surfer research "What are the latest advances in fusion energy?"
+meta-surfer research "What are the latest advances in fusion energy?"
 
 # JSON output for programmatic use
-web-surfer research --json "Compare GDP growth of G7 countries in 2024"
+meta-surfer research --json "Compare GDP growth of G7 countries in 2024"
 
 # AI-synthesized answer (uses extreme mode under the hood)
-web-surfer research --ai "How does WebAssembly compare to JavaScript performance?"
+meta-surfer research --ai "How does WebAssembly compare to JavaScript performance?"
 ```
 
 **Output format (text, without --ai):**
@@ -310,7 +310,7 @@ Fusion Energy Progress Report
 Start the optional Next.js web UI. This launches a browser-based search interface.
 
 ```
-web-surfer serve [options]
+meta-surfer serve [options]
 ```
 
 **Options:**
@@ -324,13 +324,13 @@ web-surfer serve [options]
 
 ```bash
 # Start production server (builds first, then serves)
-web-surfer serve
+meta-surfer serve
 
 # Development mode with hot reload
-web-surfer serve --dev
+meta-surfer serve --dev
 
 # Custom port
-web-surfer serve --port 8000 --dev
+meta-surfer serve --port 8000 --dev
 ```
 
 See the [Web UI Guide](./web-ui-guide.md) for more details.

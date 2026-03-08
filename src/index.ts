@@ -11,7 +11,7 @@ export type {
   CodeResult,
   SearchMode,
   LLMProvider,
-  WebSurferConfig,
+  MetaSurferConfig,
 } from "./core/types";
 export { truncate, extractDomain } from "./core/utils";
 export { markdownJoinerTransform } from "./core/parser";

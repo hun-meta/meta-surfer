@@ -26,7 +26,7 @@ export default function Home() {
         <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-4 py-3">
           <div className="max-w-3xl mx-auto flex items-center gap-2">
             <Globe className="w-5 h-5 text-accent" />
-            <span className="font-semibold text-sm">Web Surfer</span>
+            <span className="font-semibold text-sm">Meta Surfer</span>
             <ModeToggle mode={mode} onModeChange={setMode} compact />
           </div>
         </header>
@@ -43,7 +43,7 @@ export default function Home() {
               <div className="flex items-center justify-center gap-3 mb-4">
                 <Globe className="w-10 h-10 text-accent" />
                 <h1 className="text-4xl font-bold tracking-tight">
-                  Web Surfer
+                  Meta Surfer
                 </h1>
               </div>
               <p className="text-muted-foreground text-lg">

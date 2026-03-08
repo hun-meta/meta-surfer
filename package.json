@@ -1,5 +1,5 @@
 {
-  "name": "web-surfer",
+  "name": "meta-surfer",
   "version": "0.1.0",
   "description": "AI-powered web search engine — CLI, library, and optional web UI. Self-hosted Perplexity alternative with multi-provider LLM support.",
   "type": "module",
@@ -12,7 +12,7 @@
     }
   },
   "bin": {
-    "web-surfer": "./bin/web-surfer.mjs"
+    "meta-surfer": "./bin/meta-surfer.mjs"
   },
   "files": [
     "dist",
@@ -37,11 +37,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hun-meta/web-surfer.git"
+    "url": "https://github.com/hun-meta/meta-surfer.git"
   },
-  "homepage": "https://github.com/hun-meta/web-surfer#readme",
+  "homepage": "https://github.com/hun-meta/meta-surfer#readme",
   "bugs": {
-    "url": "https://github.com/hun-meta/web-surfer/issues"
+    "url": "https://github.com/hun-meta/meta-surfer/issues"
   },
   "author": "hun-meta",
   "license": "MIT",

@@ -3,15 +3,15 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createXai } from "@ai-sdk/xai";
-import type { WebSurferConfig, LLMProvider } from "./types";
+import type { MetaSurferConfig, LLMProvider } from "./types";
 
-let _config: WebSurferConfig = {};
+let _config: MetaSurferConfig = {};
 
-export function configure(config: WebSurferConfig) {
+export function configure(config: MetaSurferConfig) {
   _config = { ..._config, ...config };
 }
 
-export function getConfig(): WebSurferConfig {
+export function getConfig(): MetaSurferConfig {
   return _config;
 }
 
@@ -35,7 +35,7 @@ const ENV_KEYS: Record<LLMProvider, string> = {
  * Auto-detect provider from environment variables.
  * Checks in order: explicit config → env vars (openai → google → anthropic → xai → zai).
  */
-export function detectProvider(config?: WebSurferConfig): LLMProvider {
+export function detectProvider(config?: MetaSurferConfig): LLMProvider {
   const cfg = config || _config;
   if (cfg.provider) return cfg.provider;
 
@@ -53,12 +53,12 @@ export function detectProvider(config?: WebSurferConfig): LLMProvider {
   return "zai";
 }
 
-function resolveApiKey(provider: LLMProvider, config?: WebSurferConfig): string {
+function resolveApiKey(provider: LLMProvider, config?: MetaSurferConfig): string {
   const cfg = config || _config;
   return cfg.apiKey || process.env[ENV_KEYS[provider]] || "";
 }
 
-export function getModel(config?: WebSurferConfig): LanguageModelV1 {
+export function getModel(config?: MetaSurferConfig): LanguageModelV1 {
   const cfg = config || _config;
   const provider = detectProvider(cfg);
   const apiKey = resolveApiKey(provider, cfg);
@@ -117,7 +117,7 @@ export function getModel(config?: WebSurferConfig): LanguageModelV1 {
  * Returns true if the current provider uses OpenAI-compatible protocol.
  * Used to conditionally apply providerOptions like parallelToolCalls.
  */
-export function isOpenAICompatible(config?: WebSurferConfig): boolean {
+export function isOpenAICompatible(config?: MetaSurferConfig): boolean {
   const provider = detectProvider(config || _config);
   return provider === "openai" || provider === "zai" || provider === "xai";
 }

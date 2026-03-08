@@ -23,7 +23,7 @@ function getSystemPrompt(mode: SearchMode): string {
     weekday: "short",
   });
 
-  const base = `You are Web Surfer, an AI search assistant that provides accurate, well-sourced answers.
+  const base = `You are Meta Surfer, an AI search assistant that provides accurate, well-sourced answers.
 
 Today's date is ${dateStr}.
 
@@ -262,7 +262,7 @@ export function chat(options: {
 
     onChunk(event) {
       if (event.chunk.type === "tool-call") {
-        console.log("[WebSurfer] Tool called:", event.chunk.toolName);
+        console.log("[MetaSurfer] Tool called:", event.chunk.toolName);
       }
     },
   });

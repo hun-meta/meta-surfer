@@ -1,6 +1,6 @@
 # Providers
 
-Web Surfer supports multiple LLM providers through the Vercel AI SDK. This guide covers provider configuration, auto-detection, and customization.
+Meta Surfer supports multiple LLM providers through the Vercel AI SDK. This guide covers provider configuration, auto-detection, and customization.
 
 ## Supported Providers
 
@@ -14,7 +14,7 @@ Web Surfer supports multiple LLM providers through the Vercel AI SDK. This guide
 
 ## Auto-Detection Logic
 
-When no provider is explicitly specified, Web Surfer auto-detects the provider in this order:
+When no provider is explicitly specified, Meta Surfer auto-detects the provider in this order:
 
 1. **Explicit config**: `configure({ provider: "openai" })` or `--provider openai`
 2. **`LLM_PROVIDER` env var**: If set, uses that provider directly
@@ -35,7 +35,7 @@ There are three ways to configure the provider, listed in priority order (highes
 ### 1. Programmatic (`configure()`)
 
 ```typescript
-import { configure } from "web-surfer";
+import { configure } from "meta-surfer";
 
 configure({
   provider: "anthropic",
@@ -47,7 +47,7 @@ configure({
 ### 2. CLI Flags
 
 ```bash
-web-surfer --provider google --api-key "your-key" --model gemini-2.0-flash ask "Hello"
+meta-surfer --provider google --api-key "your-key" --model gemini-2.0-flash ask "Hello"
 ```
 
 ### 3. Environment Variables
@@ -184,7 +184,7 @@ configure({
 ### Example: OpenRouter
 
 ```bash
-web-surfer --provider openai \
+meta-surfer --provider openai \
   --base-url "https://openrouter.ai/api/v1" \
   --api-key "sk-or-your-key" \
   --model "anthropic/claude-sonnet-4-20250514" \

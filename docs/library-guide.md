@@ -1,11 +1,11 @@
 # Library Guide
 
-Web Surfer can be used as an npm package in your own Node.js and TypeScript projects. This guide covers installation, configuration, and API usage.
+Meta Surfer can be used as an npm package in your own Node.js and TypeScript projects. This guide covers installation, configuration, and API usage.
 
 ## Installation
 
 ```bash
-npm install web-surfer
+npm install meta-surfer
 ```
 
 **Peer dependencies** (installed automatically with npm 7+):
@@ -19,7 +19,7 @@ npm install web-surfer
 Before calling any API function, configure the LLM provider and service URLs using `configure()`:
 
 ```typescript
-import { configure } from "web-surfer";
+import { configure } from "meta-surfer";
 
 configure({
   provider: "openai",
@@ -34,7 +34,7 @@ configure({
 
 ### Configuration Options
 
-The `WebSurferConfig` interface accepts:
+The `MetaSurferConfig` interface accepts:
 
 | Field        | Type          | Description                                            | Default                    |
 |--------------|---------------|--------------------------------------------------------|----------------------------|
@@ -55,7 +55,7 @@ If you don't call `configure()`, the library falls back to environment variables
 Returns a complete text response. Best for CLI tools, scripts, and batch processing.
 
 ```typescript
-import { configure, ask } from "web-surfer";
+import { configure, ask } from "meta-surfer";
 
 configure({ provider: "openai", apiKey: process.env.OPENAI_API_KEY });
 
@@ -81,7 +81,7 @@ console.log(answer);
 Returns a Vercel AI SDK `streamText` result. Best for real-time UIs and streaming responses.
 
 ```typescript
-import { configure, chat } from "web-surfer";
+import { configure, chat } from "meta-surfer";
 import type { CoreMessage } from "ai";
 
 configure({ provider: "openai", apiKey: process.env.OPENAI_API_KEY });
@@ -119,7 +119,7 @@ You can call the underlying tools directly without the AI orchestration layer.
 Search the web via SearXNG with multiple queries in parallel.
 
 ```typescript
-import { configure, searchMultiQuery } from "web-surfer";
+import { configure, searchMultiQuery } from "meta-surfer";
 
 configure({ searxngURL: "http://localhost:8080" });
 
@@ -164,7 +164,7 @@ interface SearchResult {
 Scrape web page content. Uses Crawl4AI as the primary scraper with a built-in HTML fallback.
 
 ```typescript
-import { configure, scrapeUrls } from "web-surfer";
+import { configure, scrapeUrls } from "meta-surfer";
 
 configure({ crawl4aiURL: "http://localhost:11235" });
 
@@ -196,7 +196,7 @@ interface ScrapeResult {
 Execute code in a sandboxed Piston environment.
 
 ```typescript
-import { configure, executeCode } from "web-surfer";
+import { configure, executeCode } from "meta-surfer";
 
 configure({ pistonURL: "http://localhost:2000" });
 
@@ -228,7 +228,7 @@ interface ExecuteResult {
 Run the autonomous deep research pipeline. Creates a research plan, runs searches, scrapes pages, and optionally executes code -- all automatically.
 
 ```typescript
-import { configure, extremeSearch } from "web-surfer";
+import { configure, extremeSearch } from "meta-surfer";
 
 configure({
   provider: "openai",
@@ -278,7 +278,7 @@ interface CodeResult {
 import {
   // Provider utilities
   getModel,          // Get the configured LanguageModelV1 instance
-  getConfig,         // Get the current WebSurferConfig
+  getConfig,         // Get the current MetaSurferConfig
   detectProvider,    // Detect the active LLM provider
   isOpenAICompatible, // Check if provider uses OpenAI-compatible protocol
 
@@ -289,7 +289,7 @@ import {
   // Streaming
   markdownJoinerTransform, // Transform stream that buffers incomplete markdown tokens
   deduplicateAcrossQueries, // Deduplicate search results across multiple queries
-} from "web-surfer";
+} from "meta-surfer";
 ```
 
 ## TypeScript Types
@@ -308,8 +308,8 @@ import type {
   CodeResult,
   SearchMode,        // "web" | "extreme"
   LLMProvider,       // "openai" | "google" | "anthropic" | "xai" | "zai"
-  WebSurferConfig,
-} from "web-surfer";
+  MetaSurferConfig,
+} from "meta-surfer";
 ```
 
 ## Integration Examples
@@ -318,7 +318,7 @@ import type {
 
 ```typescript
 import express from "express";
-import { configure, chat } from "web-surfer";
+import { configure, chat } from "meta-surfer";
 import type { CoreMessage } from "ai";
 
 configure({
@@ -365,7 +365,7 @@ app.listen(3000);
 
 ```typescript
 import Fastify from "fastify";
-import { configure, ask } from "web-surfer";
+import { configure, ask } from "meta-surfer";
 
 configure({
   provider: "anthropic",
@@ -390,7 +390,7 @@ fastify.listen({ port: 3000 });
 ### Simple Script
 
 ```typescript
-import { configure, ask, searchMultiQuery } from "web-surfer";
+import { configure, ask, searchMultiQuery } from "meta-surfer";
 
 configure({
   provider: "openai",

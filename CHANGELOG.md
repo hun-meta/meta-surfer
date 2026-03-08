@@ -19,3 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional Next.js web UI with streaming chat interface.
 - Streaming support with markdown buffering (MarkdownJoiner transform).
 - Docker Compose setup for external services (SearXNG, Crawl4AI, Piston).
+- Maintainer checklist and release automation command.
+- 4-branch strategy documentation (dev → qa → release → main).
+
+### Fixed
+
+- Piston language mapping for JavaScript (`node` → `javascript`).
+
+### Changed
+
+- Upgrade Next.js 14 → 15.5.12 (security fixes).
+- Upgrade eslint-config-next to 15.5.12 (fix glob vulnerability).
+- Update CONTRIBUTING.md PR target to `dev` branch.

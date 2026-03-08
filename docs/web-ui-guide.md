@@ -1,6 +1,6 @@
 # Web UI Guide
 
-Web Surfer includes an optional browser-based search interface built with Next.js 14, React 18, and TailwindCSS. The web UI provides a conversational search experience with real-time streaming responses.
+Meta Surfer includes an optional browser-based search interface built with Next.js 14, React 18, and TailwindCSS. The web UI provides a conversational search experience with real-time streaming responses.
 
 ## Overview
 
@@ -77,7 +77,7 @@ npm start
 Or via the CLI (builds and starts in one step):
 
 ```bash
-web-surfer serve --port 3000
+meta-surfer serve --port 3000
 ```
 
 ## Docker Deployment
