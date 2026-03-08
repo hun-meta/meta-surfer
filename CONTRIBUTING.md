@@ -20,12 +20,26 @@ Thank you for your interest in contributing to Web Surfer. This guide covers eve
    git clone https://github.com/<your-username>/web-surfer.git
    cd web-surfer
    ```
-3. **Create a branch** for your changes:
+3. **Create a branch** from `dev` for your changes:
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout dev
+   git checkout -b feat/your-feature-name
    ```
 4. **Make your changes**, commit, and push to your fork.
-5. **Open a Pull Request** against the `main` branch.
+5. **Open a Pull Request** against the `dev` branch.
+
+### Branch Structure
+
+This project uses a 4-branch strategy:
+
+| Branch | Purpose |
+|--------|---------|
+| `dev` | Active development — **PR target** |
+| `qa` | QA/testing verification |
+| `release` | Latest published npm version |
+| `main` | Stable, proven version |
+
+All feature branches should be created from `dev` and merged back to `dev` via PR.
 
 ## Development Setup
 
@@ -106,7 +120,7 @@ See [docs/commit-convention.md](docs/commit-convention.md) for the full specific
 
 ## Pull Request Guidelines
 
-- Target the `main` branch unless instructed otherwise.
+- Target the `dev` branch (not `main`).
 - Keep PRs focused on a single concern. Avoid mixing unrelated changes.
 - Provide a clear summary of what changed and why.
 - Ensure `npm run lint` passes before submitting.
