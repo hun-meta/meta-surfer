@@ -1,10 +1,30 @@
 {
   "name": "web-surfer",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.2.0",
+  "description": "AI-powered web search engine — CLI, library, and optional web UI",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "web-surfer": "./bin/web-surfer.mjs"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md"
+  ],
   "scripts": {
+    "build:lib": "tsup",
+    "build:web": "next build",
+    "build": "tsup && next build",
     "dev": "next dev",
-    "build": "next build",
+    "dev:cli": "tsx src/cli.ts",
     "start": "next start",
     "lint": "next lint"
   },
@@ -13,6 +33,8 @@
     "@ai-sdk/react": "^1.2.0",
     "ai": "^4.3.0",
     "clsx": "^2.1.1",
+    "commander": "^13.1.0",
+    "dotenv": "^17.3.1",
     "lucide-react": "^0.468.0",
     "next": "^14.2.21",
     "react": "^18.3.1",
@@ -30,6 +52,8 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }
 }
