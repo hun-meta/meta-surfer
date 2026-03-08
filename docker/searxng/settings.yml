@@ -74,6 +74,8 @@ outgoing:
   useragent_suffix: ""
   pool_connections: 100
   pool_maxsize: 20
-  proxies:
-    all://:
-      - ***REDACTED***
+  # Proxy configuration (optional):
+  # Set SEARXNG_PROXY_URL in .env.local, then uncomment below:
+  # proxies:
+  #   all://:
+  #     - ${SEARXNG_PROXY_URL}
