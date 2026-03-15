@@ -15,7 +15,10 @@
       "Bash(npx next:*)",
       "Bash(npm run:*)",
       "Bash(node:*)",
-      "Bash(for hash:*)"
+      "Bash(for hash:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm pack:*)",
+      "Bash(npm outdated:*)"
     ]
   }
 }
