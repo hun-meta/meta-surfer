@@ -193,6 +193,59 @@ function getActiveTools(mode: SearchMode) {
   return ["webSearch", "readWebPages", "executeCode"] as const;
 }
 
+function getEngineConfig(mode: SearchMode) {
+  return {
+    model: getModel(),
+    system: getSystemPrompt(mode),
+    tools: createTools(),
+    experimental_activeTools: [...getActiveTools(mode)],
+    maxSteps: mode === "extreme" ? 3 : 5,
+    ...(isOpenAICompatible()
+      ? { providerOptions: { openaiCompatible: { parallelToolCalls: false } } }
+      : {}),
+  };
+}
+
+async function repairToolCall({
+  toolCall,
+  tools,
+  parameterSchema,
+  error,
+}: {
+  toolCall: { toolCallType: "function"; toolCallId: string; toolName: string; args: string };
+  tools: Record<string, unknown>;
+  parameterSchema: (opts: { toolName: string }) => unknown;
+  error: unknown;
+}) {
+  if (NoSuchToolError.isInstance(error) || !tools[toolCall.toolName]) {
+    return null;
+  }
+
+  try {
+    const schema = parameterSchema({ toolName: toolCall.toolName });
+    const { object: repairedArgs } = await generateObject({
+      model: getModel(),
+      schema: z.any(),
+      prompt: [
+        `The model tried to call the tool "${toolCall.toolName}" with the following arguments:`,
+        toolCall.args,
+        `The tool accepts the following JSON schema:`,
+        JSON.stringify(schema),
+        "Please fix the arguments to match the schema.",
+        `Today's date is ${new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}`,
+      ].join("\n"),
+    });
+
+    return { ...toolCall, args: JSON.stringify(repairedArgs) };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Stream a chat response with tool calling.
  * Framework-independent — returns an AI SDK streamText result.
@@ -202,64 +255,12 @@ export function chat(options: {
   mode?: SearchMode;
 }) {
   const mode = options.mode || "web";
-  const allTools = createTools();
-  const activeToolNames = getActiveTools(mode);
 
   return streamText({
-    model: getModel(),
-    system: getSystemPrompt(mode),
+    ...getEngineConfig(mode),
     messages: options.messages,
-    tools: allTools,
-    experimental_activeTools: [...activeToolNames],
-    maxSteps: mode === "extreme" ? 3 : 5,
-
-    // Buffer incomplete markdown tokens during streaming
     experimental_transform: markdownJoinerTransform(),
-
-    experimental_repairToolCall: async ({
-      toolCall,
-      tools,
-      parameterSchema,
-      error,
-    }) => {
-      if (NoSuchToolError.isInstance(error)) {
-        return null;
-      }
-
-      const matchedTool = tools[toolCall.toolName as keyof typeof tools];
-      if (!matchedTool) {
-        return null;
-      }
-
-      try {
-        const schema = parameterSchema({ toolName: toolCall.toolName });
-        const { object: repairedArgs } = await generateObject({
-          model: getModel(),
-          schema: z.any(),
-          prompt: [
-            `The model tried to call the tool "${toolCall.toolName}" with the following arguments:`,
-            toolCall.args,
-            `The tool accepts the following JSON schema:`,
-            JSON.stringify(schema),
-            "Please fix the arguments to match the schema.",
-            `Today's date is ${new Date().toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}`,
-          ].join("\n"),
-        });
-
-        return { ...toolCall, args: JSON.stringify(repairedArgs) };
-      } catch {
-        return null;
-      }
-    },
-
-    ...(isOpenAICompatible()
-      ? { providerOptions: { openaiCompatible: { parallelToolCalls: false } } }
-      : {}),
-
+    experimental_repairToolCall: repairToolCall,
     onChunk(event) {
       if (event.chunk.type === "tool-call") {
         console.log("[MetaSurfer] Tool called:", event.chunk.toolName);
@@ -277,20 +278,11 @@ export async function ask(options: {
   mode?: SearchMode;
 }): Promise<string> {
   const mode = options.mode || "web";
-  const allTools = createTools();
-  const activeToolNames = getActiveTools(mode);
 
   const result = await generateText({
-    model: getModel(),
-    system: getSystemPrompt(mode),
+    ...getEngineConfig(mode),
     messages: [{ role: "user", content: options.query }],
-    tools: allTools,
-    experimental_activeTools: [...activeToolNames],
-    maxSteps: mode === "extreme" ? 3 : 5,
-
-    ...(isOpenAICompatible()
-      ? { providerOptions: { openaiCompatible: { parallelToolCalls: false } } }
-      : {}),
+    experimental_repairToolCall: repairToolCall,
   });
 
   return result.text;
