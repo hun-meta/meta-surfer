@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { UIMessage } from "ai";
 import { MarkdownRenderer } from "./markdown-renderer";
 import { SourcesList } from "./source-card";
@@ -12,6 +13,8 @@ import {
   Loader2,
   Zap,
   BookOpen,
+  Copy,
+  Check,
 } from "lucide-react";
 
 interface MessageListProps {
@@ -104,7 +107,8 @@ function AssistantMessage({ message }: { message: UIMessage }) {
 
         {/* Text answer */}
         {hasText && (
-          <div className="animate-slide-up">
+          <div className="animate-slide-up relative group/answer">
+            <CopyResponseButton content={message.content as string} />
             <MarkdownRenderer content={message.content as string} />
           </div>
         )}
@@ -340,6 +344,30 @@ function ExtremeSearchStatus({
         </div>
       )}
     </div>
+  );
+}
+
+function CopyResponseButton({ content }: { content: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      aria-label="Copy response"
+      className="absolute top-0 right-0 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors opacity-0 group-hover/answer:opacity-100"
+    >
+      {copied ? (
+        <Check className="w-4 h-4 text-green-400" />
+      ) : (
+        <Copy className="w-4 h-4" />
+      )}
+    </button>
   );
 }
 
