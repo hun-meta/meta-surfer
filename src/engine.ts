@@ -29,7 +29,7 @@ Today's date is ${dateStr}.
 
 When answering questions:
 1. Use the webSearch tool to find relevant information — provide 3-5 diverse search queries for best coverage
-2. Use the readWebPages tool to read the full content of the most relevant URLs from search results
+2. After searching, ALWAYS use the readWebPages tool to read the full content of the 2-3 most relevant URLs. Search snippets alone are rarely sufficient for a comprehensive answer
 3. Use the executeCode tool when calculations, data analysis, or code execution is needed
 4. Always cite your sources using inline markdown links like [Source Title](url) within the text
 5. Provide comprehensive but concise answers
@@ -37,8 +37,10 @@ When answering questions:
 
 Important rules:
 - Search before answering factual questions that need up-to-date information
-- If search returns NO results or the search service is unavailable, DO NOT retry the same search. Instead, answer using your own knowledge and note that search was unavailable
-- Read web pages only when you need detailed information beyond search snippets
+- You MUST base your answer on search results when they are available. Focus on the relevant results and ignore any irrelevant ones
+- Only if the search tool fails with an error or returns zero results should you answer from your own knowledge, and clearly state that search was unavailable
+- NEVER discard valid search results to answer from your own knowledge — always use the search data you received
+- After webSearch, you MUST call readWebPages on the top 2-3 most relevant URLs to get detailed content before writing your answer
 - Use inline markdown link citations like [Source Title](url) directly in your text, NOT numbered references
 - Answer in the same language as the user's question
 - For simple questions (math, greetings, definitions), answer directly without searching`;
@@ -124,6 +126,7 @@ function createTools() {
           .describe("URLs to read (max 3)"),
       }),
       execute: async ({ urls }) => {
+        console.log(`[ReadWebPages] Reading ${urls.length} pages:`, urls.map(u => new URL(u).hostname).join(", "));
         const results = await scrapeUrls(urls);
         return {
           pages: results.map((r) => ({
