@@ -1,6 +1,8 @@
 # Docker Setup
 
-Meta Surfer relies on three external services for search, scraping, and code execution. All three run via Docker Compose.
+Meta Surfer relies on external services for search, scraping, and code execution. Docker Compose is the easiest way to run them locally, but it is **not the only option** -- you can host these services on a remote server, in Kubernetes, or via any other method. Meta Surfer only needs their HTTP URLs (configured via `configure()` or environment variables).
+
+> **For library users:** If your project already has access to running SearXNG/Crawl4AI/Piston instances (e.g., on a shared server), you do not need Docker at all. Just pass the service URLs to `configure()`.
 
 ## Service Overview
 

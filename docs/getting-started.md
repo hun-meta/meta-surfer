@@ -5,8 +5,12 @@ This guide walks you through setting up Meta Surfer from scratch -- from install
 ## Prerequisites
 
 - **Node.js 20+** -- required for the CLI and library
-- **Docker** and **Docker Compose** -- required for external services (SearXNG, Crawl4AI, Piston)
 - **An LLM API key** -- at least one of: OpenAI, Google, Anthropic, xAI, or Z.AI
+- **SearXNG** (required) -- meta search engine. Without it, web search is unavailable
+- **Crawl4AI** (recommended) -- web page scraper. A built-in HTML fallback is used when unavailable
+- **Piston** (optional) -- code execution sandbox. Only needed for calculations and code analysis
+
+**Running the services:** The included `docker-compose.yml` is the easiest way to run SearXNG, Crawl4AI, and Piston locally. However, Docker is not strictly required -- you can point Meta Surfer to services hosted anywhere by setting their URLs via `configure()` or environment variables.
 
 ## Step 1: Clone the Repository
 
@@ -60,11 +64,11 @@ docker compose up -d
 
 This starts three services:
 
-| Service  | Port  | Purpose                  |
-|----------|-------|--------------------------|
-| SearXNG  | 8080  | Meta search engine       |
-| Crawl4AI | 11235 | Web page scraping        |
-| Piston   | 2000  | Sandboxed code execution |
+| Service  | Port  | Required? | Purpose                  |
+|----------|-------|-----------|--------------------------|
+| SearXNG  | 8080  | **Required** | Meta search engine       |
+| Crawl4AI | 11235 | Recommended | Web page scraping (has built-in fallback) |
+| Piston   | 2000  | Optional | Sandboxed code execution |
 
 Wait about 30 seconds for all services to finish initializing before proceeding.
 
@@ -133,6 +137,39 @@ npx tsx src/cli.ts ask --mode extreme "Compare the top 3 JavaScript frameworks i
 ```
 
 See the [CLI Guide](./cli-guide.md) for the full command reference.
+
+## Library Quick Start
+
+If you want to use Meta Surfer as an npm package in your own project (instead of the CLI), follow these steps:
+
+```bash
+npm install meta-surfer
+```
+
+> **Important:** The library does **not** auto-load `.env` files. Unlike the CLI (which reads `.env.local` and `.env` automatically), library users must pass configuration explicitly via `configure()` or ensure environment variables are set by their own application.
+
+```typescript
+import { configure, ask } from "meta-surfer";
+
+// You must configure before calling any API function
+configure({
+  provider: "openai",
+  apiKey: process.env.OPENAI_API_KEY,
+  searxngURL: "http://localhost:8080",  // required -- SearXNG must be reachable
+});
+
+const answer = await ask({ query: "What is quantum computing?" });
+console.log(answer);
+```
+
+**Requirements:**
+
+- **Node.js >= 20** with **ESM support** (`"type": "module"` in your `package.json`, or use `.mts` files)
+- **SearXNG** reachable at the configured URL (search will fail without it)
+- **At least one LLM API key** passed via `configure()` or environment variables
+- **Network connectivity** from your runtime to SearXNG, Crawl4AI (if used), and the LLM provider API
+
+See the [Library Guide](./library-guide.md) for full API reference and integration examples.
 
 ## What's Next
 

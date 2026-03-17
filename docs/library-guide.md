@@ -2,21 +2,33 @@
 
 Meta Surfer can be used as an npm package in your own Node.js and TypeScript projects. This guide covers installation, configuration, and API usage.
 
+## Prerequisites
+
+- **Node.js >= 20** -- required for native `fetch`, `AbortSignal.timeout()`, and other modern APIs
+- **ESM support** -- Meta Surfer is ESM-only. Your project must use `"type": "module"` in `package.json` or import from `.mts` files
+- **At least one LLM API key** -- OpenAI, Google, Anthropic, xAI, or Z.AI
+- **SearXNG** (required) -- a running SearXNG instance reachable over HTTP. Without it, web search is unavailable and `ask()` falls back to the LLM's own knowledge
+- **Crawl4AI** (recommended) -- web scraping service. When unavailable, a built-in HTML fallback (`enhancedFetch`) is used instead
+- **Piston** (optional) -- only needed if the LLM uses the code execution tool for calculations or data analysis
+- **Network connectivity** -- your runtime must be able to reach the external services (SearXNG, Crawl4AI, Piston) and the LLM provider API over HTTP/HTTPS. This may require firewall or VPC configuration in serverless or cloud environments
+
+> **Docker is not required.** The services can be hosted anywhere -- Docker is simply the easiest local setup. Meta Surfer only needs their HTTP URLs.
+
 ## Installation
 
 ```bash
 npm install meta-surfer
 ```
 
-**Peer dependencies** (installed automatically with npm 7+):
-
-- `ai` (Vercel AI SDK v4)
-- `@ai-sdk/openai`
-- `zod`
+This installs Meta Surfer and its runtime dependencies (`ai`, `@ai-sdk/openai`, `@ai-sdk/google`, `@ai-sdk/anthropic`, `@ai-sdk/xai`, `zod`, `commander`, `dotenv`). Web UI packages (Next.js, React, etc.) are **not** installed.
 
 ## Configuration
 
 Before calling any API function, configure the LLM provider and service URLs using `configure()`:
+
+> **Important: `.env` files are not auto-loaded.** Unlike the CLI (which reads `.env.local` and `.env` from the working directory), the library does **not** load environment files automatically. You must either:
+> 1. Call `configure()` with explicit values, or
+> 2. Load environment variables in your own application (e.g., `import "dotenv/config"`) before importing Meta Surfer
 
 ```typescript
 import { configure } from "meta-surfer";

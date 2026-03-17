@@ -169,11 +169,15 @@ User Query
  Piston (optional code execution)
 ```
 
-**External services** (managed via `docker-compose.yml`):
+**External services:**
 
-- **SearXNG** -- Privacy-respecting meta search engine aggregating results from multiple search providers
-- **Crawl4AI** -- Web page scraper that extracts clean markdown content from URLs
-- **Piston** -- Sandboxed code execution engine supporting 50+ programming languages
+| Service  | Required? | Description | Fallback |
+|----------|-----------|-------------|----------|
+| **SearXNG** | **Required** | Meta search engine for web queries | None -- search fails without it |
+| **Crawl4AI** | Recommended | Web page scraper for detailed content | Built-in HTML fetcher (`enhancedFetch`) |
+| **Piston** | Optional | Sandboxed code execution | Code execution unavailable; search still works |
+
+These services communicate over HTTP. The included `docker-compose.yml` is the easiest way to run them locally, but you can also host them on a remote server or use any other deployment method -- Meta Surfer only needs their URLs.
 
 The core engine (`src/engine.ts`) orchestrates these services as LLM tool calls using the Vercel AI SDK, allowing the model to decide when to search, read pages, or run code.
 
