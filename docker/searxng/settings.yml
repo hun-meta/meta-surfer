@@ -77,6 +77,7 @@ outgoing:
   # Proxy configuration:
   # SEARXNG_PROXY_URL is required for stable search performance.
   # Set it in .env.local — the entrypoint.sh script injects it automatically at startup.
+  # DO NOT hardcode proxy credentials here. This file is tracked by git.
   # proxies:
   #   all://:
   #     - ${SEARXNG_PROXY_URL}
