@@ -1,5 +1,5 @@
-import type { SearchResult, SearchQueryResult, MultiSearchResponse } from "../core/types";
-import { getConfig } from "../core/provider";
+import type { SearchResult, SearchQueryResult, MultiSearchResponse } from "../core/types.js";
+import { getConfig } from "../core/provider.js";
 
 function detectLanguage(query: string): string {
   if (/[\uAC00-\uD7AF\u1100-\u11FF\u3130-\u318F]/.test(query)) return "ko";

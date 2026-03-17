@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 import { SearchInput } from "@/components/search-input";
 import { MessageList } from "@/components/message-list";
 import { Globe, Zap } from "lucide-react";
@@ -10,14 +11,34 @@ type SearchMode = "web" | "extreme";
 
 export default function Home() {
   const [mode, setMode] = useState<SearchMode>("web");
+  const [input, setInput] = useState("");
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } =
-    useChat({
+  const { messages, sendMessage, status, stop } = useChat({
+    transport: new DefaultChatTransport({
       api: "/api/chat",
       body: { mode },
-    });
+    }),
+  });
 
+  const isLoading = status === "streaming" || status === "submitted";
   const hasMessages = messages.length > 0;
+
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!input.trim()) return;
+      sendMessage({ role: "user", parts: [{ type: "text", text: input }] });
+      setInput("");
+    },
+    [input, sendMessage]
+  );
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInput(e.target.value);
+    },
+    []
+  );
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -69,11 +90,7 @@ export default function Home() {
               ].map((suggestion) => (
                 <button
                   key={suggestion}
-                  onClick={() => {
-                    handleInputChange({
-                      target: { value: suggestion },
-                    } as React.ChangeEvent<HTMLTextAreaElement>);
-                  }}
+                  onClick={() => setInput(suggestion)}
                   className="px-3 py-1.5 text-sm text-muted-foreground border border-border rounded-full hover:bg-muted hover:text-foreground transition-colors"
                 >
                   {suggestion}

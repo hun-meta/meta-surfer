@@ -1,14 +1,14 @@
 import { config as loadEnv } from "dotenv";
 import { Command } from "commander";
-import { configure } from "./core/provider";
-import { searchMultiQuery } from "./tools/web-search";
-import { scrapeUrls } from "./tools/web-scrape";
-import { executeCode } from "./tools/code-execute";
-import { extremeSearch } from "./tools/extreme-search";
-import { ask } from "./engine";
+import { configure } from "./core/provider.js";
+import { searchMultiQuery } from "./tools/web-search.js";
+import { scrapeUrls } from "./tools/web-scrape.js";
+import { executeCode } from "./tools/code-execute.js";
+import { extremeSearch } from "./tools/extreme-search.js";
+import { ask } from "./engine.js";
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
-import type { SearchMode, LLMProvider } from "./core/types";
+import type { SearchMode, LLMProvider } from "./core/types.js";
 
 // Auto-load .env.local (Next.js convention) and .env from the user's working directory
 const projectRoot = process.cwd();

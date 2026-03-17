@@ -1,19 +1,21 @@
 import {
   streamText,
   tool,
-  generateObject,
   generateText,
   NoSuchToolError,
-  type CoreMessage,
+  stepCountIs,
+  type ModelMessage,
+  type StreamTextResult,
+  type ToolSet,
 } from "ai";
 import { z } from "zod";
-import { getModel, isOpenAICompatible } from "./core/provider";
-import { markdownJoinerTransform } from "./core/parser";
-import { searchMultiQuery, deduplicateAcrossQueries } from "./tools/web-search";
-import { scrapeUrls } from "./tools/web-scrape";
-import { executeCode } from "./tools/code-execute";
-import { extremeSearch } from "./tools/extreme-search";
-import type { SearchMode } from "./core/types";
+import { getModel, isOpenAICompatible } from "./core/provider.js";
+import { markdownJoinerTransform } from "./core/parser.js";
+import { searchMultiQuery, deduplicateAcrossQueries } from "./tools/web-search.js";
+import { scrapeUrls } from "./tools/web-scrape.js";
+import { executeCode } from "./tools/code-execute.js";
+import { extremeSearch } from "./tools/extreme-search.js";
+import type { SearchMode } from "./core/types.js";
 
 function getSystemPrompt(mode: SearchMode): string {
   const dateStr = new Date().toLocaleDateString("en-US", {
@@ -68,7 +70,7 @@ function createTools() {
     webSearch: tool({
       description:
         "Search the web with multiple queries in parallel for comprehensive results. Provide 3-5 diverse queries to maximize coverage.",
-      parameters: z.object({
+      inputSchema: z.object({
         queries: z
           .array(z.string())
           .min(1)
@@ -118,7 +120,7 @@ function createTools() {
     readWebPages: tool({
       description:
         "Read the full content of web pages. Use this after webSearch to get detailed information from the most relevant URLs. Pass up to 3 URLs at once.",
-      parameters: z.object({
+      inputSchema: z.object({
         urls: z
           .array(z.string().url())
           .min(1)
@@ -142,7 +144,7 @@ function createTools() {
     executeCode: tool({
       description:
         "Execute code in a sandboxed environment. Supports Python, JavaScript, TypeScript, and other languages. Use for calculations, data analysis, or demonstrating code.",
-      parameters: z.object({
+      inputSchema: z.object({
         language: z
           .string()
           .describe(
@@ -165,7 +167,7 @@ function createTools() {
     extremeSearch: tool({
       description:
         "Perform deep, multi-step autonomous research on a complex topic. Creates a research plan, executes multiple searches, reads key pages, and optionally runs code for analysis. Use for comprehensive research questions.",
-      parameters: z.object({
+      inputSchema: z.object({
         prompt: z
           .string()
           .describe("The research question or topic to investigate deeply"),
@@ -201,8 +203,8 @@ function getEngineConfig(mode: SearchMode) {
     model: getModel(),
     system: getSystemPrompt(mode),
     tools: createTools(),
-    experimental_activeTools: [...getActiveTools(mode)],
-    maxSteps: mode === "extreme" ? 3 : 5,
+    activeTools: [...getActiveTools(mode)],
+    stopWhen: stepCountIs(mode === "extreme" ? 3 : 5),
     ...(isOpenAICompatible()
       ? { providerOptions: { openaiCompatible: { parallelToolCalls: false } } }
       : {}),
@@ -212,29 +214,30 @@ function getEngineConfig(mode: SearchMode) {
 async function repairToolCall({
   toolCall,
   tools,
-  parameterSchema,
+  inputSchema,
   error,
 }: {
-  toolCall: { toolCallType: "function"; toolCallId: string; toolName: string; args: string };
+  toolCall: { toolCallId: string; toolName: string; input: string };
   tools: Record<string, unknown>;
-  parameterSchema: (opts: { toolName: string }) => unknown;
+  inputSchema: (opts: { toolName: string }) => PromiseLike<unknown>;
   error: unknown;
+  system?: unknown;
+  messages?: unknown;
 }) {
   if (NoSuchToolError.isInstance(error) || !tools[toolCall.toolName]) {
     return null;
   }
 
   try {
-    const schema = parameterSchema({ toolName: toolCall.toolName });
-    const { object: repairedArgs } = await generateObject({
+    const schema = await inputSchema({ toolName: toolCall.toolName });
+    const { text } = await generateText({
       model: getModel(),
-      schema: z.any(),
       prompt: [
         `The model tried to call the tool "${toolCall.toolName}" with the following arguments:`,
-        toolCall.args,
+        toolCall.input,
         `The tool accepts the following JSON schema:`,
         JSON.stringify(schema),
-        "Please fix the arguments to match the schema.",
+        "Please fix the arguments to match the schema. Respond with ONLY a valid JSON object, nothing else.",
         `Today's date is ${new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -243,7 +246,9 @@ async function repairToolCall({
       ].join("\n"),
     });
 
-    return { ...toolCall, args: JSON.stringify(repairedArgs) };
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return null;
+    return { type: "tool-call" as const, ...toolCall, input: jsonMatch[0] };
   } catch {
     return null;
   }
@@ -254,9 +259,9 @@ async function repairToolCall({
  * Framework-independent — returns an AI SDK streamText result.
  */
 export function chat(options: {
-  messages: CoreMessage[];
+  messages: ModelMessage[];
   mode?: SearchMode;
-}) {
+}): StreamTextResult<ToolSet, any> {
   const mode = options.mode || "web";
 
   return streamText({
@@ -269,7 +274,7 @@ export function chat(options: {
         console.log("[MetaSurfer] Tool called:", event.chunk.toolName);
       }
     },
-  });
+  }) as unknown as StreamTextResult<ToolSet, any>;
 }
 
 /**

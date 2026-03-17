@@ -1,5 +1,5 @@
-import type { ExecuteResult } from "../core/types";
-import { getConfig } from "../core/provider";
+import type { ExecuteResult } from "../core/types.js";
+import { getConfig } from "../core/provider.js";
 
 const LANGUAGE_MAP: Record<string, { piston: string; version: string }> = {
   python: { piston: "python", version: "3.10.0" },

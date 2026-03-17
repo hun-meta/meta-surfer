@@ -39,6 +39,13 @@ interface TextPart {
 
 type MessagePart = ToolInvocationPart | TextPart | { type: string };
 
+function getTextContent(message: UIMessage): string {
+  return (message.parts ?? [])
+    .filter((p): p is TextPart => p.type === "text")
+    .map((p) => p.text)
+    .join("");
+}
+
 export function MessageList({ messages, isLoading }: MessageListProps) {
   return (
     <div className="space-y-6">
@@ -54,7 +61,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
 
 function MessageItem({ message }: { message: UIMessage }) {
   if (message.role === "user") {
-    return <UserMessage content={message.content} />;
+    return <UserMessage content={getTextContent(message)} />;
   }
 
   if (message.role === "assistant") {
@@ -78,12 +85,10 @@ function UserMessage({ content }: { content: string }) {
 }
 
 function AssistantMessage({ message }: { message: UIMessage }) {
-  const parts = (message as UIMessage & { parts?: MessagePart[] }).parts;
+  const parts = (message.parts ?? []) as MessagePart[];
   const searchSources = extractSearchSources(parts);
-  const hasText =
-    message.content &&
-    typeof message.content === "string" &&
-    message.content.length > 0;
+  const textContent = getTextContent(message);
+  const hasText = textContent.length > 0;
 
   return (
     <div className="flex gap-3 animate-fade-in">
@@ -92,7 +97,7 @@ function AssistantMessage({ message }: { message: UIMessage }) {
       </div>
       <div className="flex-1 min-w-0 space-y-4">
         {/* Tool invocations */}
-        {parts?.map((part, i) => {
+        {parts.map((part, i) => {
           if (part.type === "tool-invocation") {
             const toolPart = part as ToolInvocationPart;
             return (
@@ -108,8 +113,8 @@ function AssistantMessage({ message }: { message: UIMessage }) {
         {/* Text answer */}
         {hasText && (
           <div className="animate-slide-up relative group/answer">
-            <CopyResponseButton content={message.content as string} />
-            <MarkdownRenderer content={message.content as string} />
+            <CopyResponseButton content={textContent} />
+            <MarkdownRenderer content={textContent} />
           </div>
         )}
       </div>

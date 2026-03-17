@@ -11,7 +11,7 @@ export default defineConfig([
     clean: true,
     sourcemap: true,
     target: "node20",
-    external: ["ai", "@ai-sdk/openai", "@ai-sdk/google", "@ai-sdk/anthropic", "@ai-sdk/xai", "zod"],
+    external: ["ai", "@ai-sdk/openai", "@ai-sdk/google", "@ai-sdk/anthropic", "@ai-sdk/xai", "@ai-sdk/provider", "@ai-sdk/provider-utils", "zod"],
   },
   // CLI build
   {

@@ -1,9 +1,9 @@
-import type { LanguageModelV1 } from "ai";
+import type { LanguageModel } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createXai } from "@ai-sdk/xai";
-import type { MetaSurferConfig, LLMProvider } from "./types";
+import type { MetaSurferConfig, LLMProvider } from "./types.js";
 
 let _config: MetaSurferConfig = {};
 
@@ -58,7 +58,7 @@ function resolveApiKey(provider: LLMProvider, config?: MetaSurferConfig): string
   return cfg.apiKey || process.env[ENV_KEYS[provider]] || "";
 }
 
-export function getModel(config?: MetaSurferConfig): LanguageModelV1 {
+export function getModel(config?: MetaSurferConfig): LanguageModel {
   const cfg = config || _config;
   const provider = detectProvider(cfg);
   const apiKey = resolveApiKey(provider, cfg);
@@ -70,7 +70,7 @@ export function getModel(config?: MetaSurferConfig): LanguageModelV1 {
         apiKey,
         ...(cfg.baseURL ? { baseURL: cfg.baseURL } : {}),
       });
-      return openai(modelId);
+      return openai.chat(modelId);
     }
 
     case "google": {
@@ -101,9 +101,8 @@ export function getModel(config?: MetaSurferConfig): LanguageModelV1 {
       const zai = createOpenAI({
         baseURL: cfg.baseURL || process.env.ZAI_BASE_URL || "https://api.z.ai/api/coding/paas/v4",
         apiKey,
-        compatibility: "compatible",
       });
-      return zai(modelId);
+      return zai.chat(modelId);
     }
 
     default: {

@@ -1,5 +1,5 @@
-import type { ScrapeResult } from "../core/types";
-import { getConfig } from "../core/provider";
+import type { ScrapeResult } from "../core/types.js";
+import { getConfig } from "../core/provider.js";
 
 export async function scrapeUrls(urls: string[]): Promise<ScrapeResult[]> {
   const results = await Promise.allSettled(urls.map((url) => scrapeSingle(url)));
