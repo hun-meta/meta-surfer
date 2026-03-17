@@ -8,6 +8,52 @@ function detectLanguage(query: string): string {
   return "en";
 }
 
+/**
+ * Filter results whose title language doesn't match the query language.
+ * English titles are always accepted (universal tech language).
+ */
+function hasLanguageMismatch(queryLang: string, title: string): boolean {
+  const titleLang = detectLanguage(title);
+  // English results are universally acceptable
+  if (titleLang === "en") return false;
+  // Same language — keep
+  if (titleLang === queryLang) return false;
+  // Different CJK language — mismatch (e.g., Chinese result for Korean query)
+  return true;
+}
+
+/**
+ * Lightweight content relevance check.
+ * Tokenises the query, ignores pure numbers (year-only matches),
+ * and requires at least one meaningful keyword hit in the title+content.
+ *
+ * Only applied when the query language differs from the result language
+ * (e.g., English result for Korean query) to avoid false-filtering
+ * same-language results with poor snippets.
+ */
+function hasMinimalRelevance(
+  query: string,
+  queryLang: string,
+  result: SearchResult
+): boolean {
+  const resultLang = detectLanguage(result.title);
+
+  // Same language → trust SearXNG ranking, don't second-guess
+  if (resultLang === queryLang) return true;
+
+  // Tokenise query: keep words ≥ 2 chars, drop pure digits (years etc.)
+  const queryWords = query
+    .toLowerCase()
+    .split(/[\s,;:!?·()\[\]"'""'']/u)
+    .map((w) => w.replace(/[년월일]$/u, "")) // strip Korean date suffixes
+    .filter((w) => w.length >= 2 && !/^\d+$/.test(w));
+
+  if (queryWords.length === 0) return true;
+
+  const text = `${result.title} ${result.content}`.toLowerCase();
+  return queryWords.some((w) => text.includes(w));
+}
+
 const extractDomain = (url: string): string => {
   try {
     return new URL(url).hostname.replace("www.", "");
@@ -41,18 +87,11 @@ async function searchSearXNG(query: string): Promise<SearchResult[]> {
   url.searchParams.set("q", query);
   url.searchParams.set("format", "json");
   url.searchParams.set("categories", "general");
-  url.searchParams.set("language", detectLanguage(query));
+  const queryLang = detectLanguage(query);
+  url.searchParams.set("language", queryLang);
 
-  const response = await fetch(url.toString(), {
-    headers: { Accept: "application/json" },
-    signal: AbortSignal.timeout(10000),
-  });
+  const data = await fetchSearXNGWithRetry(url.toString());
 
-  if (!response.ok) {
-    throw new Error(`SearXNG responded with ${response.status}`);
-  }
-
-  const data = await response.json() as { results?: { title: string; url: string; content: string }[] };
   return (data.results || [])
     .slice(0, 15)
     .map(
@@ -64,7 +103,44 @@ async function searchSearXNG(query: string): Promise<SearchResult[]> {
           favicon: `https://www.google.com/s2/favicons?domain=${extractDomain(r.url)}&sz=32`,
         }) satisfies SearchResult
     )
-    .filter((r: SearchResult) => r.url && !isIrrelevantUrl(r.url));
+    .filter((r: SearchResult) => {
+      if (!r.url) return false;
+      if (isIrrelevantUrl(r.url)) return false;
+      if (hasLanguageMismatch(queryLang, r.title)) return false;
+      // Filter results with no title and no content
+      if (!r.title.trim() && !r.content.trim()) return false;
+      // Cross-language relevance: filter English results with zero query keyword overlap
+      if (!hasMinimalRelevance(query, queryLang, r)) return false;
+      return true;
+    });
+}
+
+/**
+ * Fetch SearXNG with 1 automatic retry on failure (timeout, network error).
+ */
+async function fetchSearXNGWithRetry(
+  url: string,
+  retries = 1
+): Promise<{ results?: { title: string; url: string; content: string }[] }> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        headers: { Accept: "application/json" },
+        signal: AbortSignal.timeout(15000),
+      });
+      if (!response.ok) {
+        throw new Error(`SearXNG responded with ${response.status}`);
+      }
+      return await response.json() as { results?: { title: string; url: string; content: string }[] };
+    } catch (error) {
+      lastError = error;
+      if (attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, 1500 * (attempt + 1)));
+      }
+    }
+  }
+  throw lastError;
 }
 
 function isIrrelevantUrl(url: string): boolean {
@@ -118,6 +194,14 @@ function isIrrelevantUrl(url: string): boolean {
     }
 
     if (u.protocol === "http:") {
+      return true;
+    }
+
+    // Generic profile/listing/directory pages (e.g., profile.php?id=1)
+    if (/\/profile\.php/i.test(path) && u.search.includes("id=")) {
+      return true;
+    }
+    if (/\/detail\.php/i.test(path) && u.search.includes("id=")) {
       return true;
     }
 

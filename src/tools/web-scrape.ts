@@ -41,7 +41,7 @@ async function crawl4AI(url: string): Promise<ScrapeResult> {
       priority: 10,
       word_count_threshold: 50,
     }),
-    signal: AbortSignal.timeout(10000),
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!response.ok) {
@@ -73,7 +73,7 @@ async function enhancedFetch(url: string): Promise<ScrapeResult> {
         "Mozilla/5.0 (compatible; MetaSurfer/1.0; +http://localhost)",
       Accept: "text/html,application/xhtml+xml",
     },
-    signal: AbortSignal.timeout(8000),
+    signal: AbortSignal.timeout(12000),
     redirect: "follow",
   });
 
