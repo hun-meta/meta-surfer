@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-03-17
+
+### Added
+
+- Language mismatch filter for cross-CJK search queries (e.g., filter Chinese results from Korean queries).
+- Content relevance filter for cross-language results (ignore year-only keyword matches).
+- Generic page filter for profile.php/detail.php directory pages.
+- SearXNG fetch retry with 1.5s backoff on transient failures.
+- ReadWebPages execution logging for tool call observability.
+
+### Changed
+
+- Enforce readWebPages as a required step after webSearch in system prompt — LLM now always reads top 2-3 URLs for detailed content.
+- Prevent LLM from discarding valid search results to fall back on training data.
+- Increase SearXNG timeout from 10s to 15s.
+- Increase Crawl4AI timeout from 10s to 15s.
+- Increase enhancedFetch timeout from 8s to 12s.
+- Move web UI packages (Next.js, React, etc.) from dependencies to devDependencies.
+- Clarify service requirements (required/recommended/optional) in all documentation.
+- Add library quick start section to getting-started guide.
+- Add warning comment against hardcoding proxy credentials in SearXNG settings.
+
 ## [0.2.0] - 2026-03-15
 
 ### Added
