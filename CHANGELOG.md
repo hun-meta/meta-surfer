@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-03-17
+
+### Added
+
+- Re-export `ModelMessage`, `StreamTextResult`, `ToolSet` types from `ai` package for library consumers.
+
+### Changed
+
+- **BREAKING (library):** Upgrade AI SDK from v4 to v6 (`ai` 4.x → 6.x, `@ai-sdk/*` 1.x → 3.x).
+- **BREAKING (library):** Upgrade Zod from v3 to v4 (`zod` 3.x → 4.x).
+- `chat()` now accepts `ModelMessage[]` instead of `CoreMessage[]`.
+- `chat()` return type is now `StreamTextResult<ToolSet, any>`.
+- Rename `experimental_activeTools` → `activeTools` (AI SDK v5 stable).
+- Replace `maxSteps` with `stopWhen(stepCountIs())` (AI SDK v5).
+- Rename tool `parameters` → `inputSchema` (AI SDK v5).
+- Use `openai.chat()` for Chat Completions API (AI SDK v5 Responses API default).
+- Replace `toDataStreamResponse()` → `toUIMessageStreamResponse()` in web UI.
+- Migrate `useChat` to transport architecture with manual input state.
+- Extract text from `UIMessage.parts` instead of `.content` in web UI.
+- Add `.js` extensions to all relative imports for ESM compatibility.
+
+### Fixed
+
+- Fix `extremeSearch` for OpenAI-compatible providers by replacing `generateObject` with `generateText` + JSON parsing.
+- Fix `research --json` output by moving debug logs from stdout to stderr.
+- Fix `flatted` high severity vulnerability (unbounded recursion DoS).
+
 ## [0.2.1] - 2026-03-17
 
 ### Added
