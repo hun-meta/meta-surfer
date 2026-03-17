@@ -1,45 +1,33 @@
-import { generateObject } from "ai";
-import { z } from "zod";
-import { getModel } from "../core/provider";
-import { searchMultiQuery } from "./web-search";
-import { scrapeUrls } from "./web-scrape";
-import { executeCode } from "./code-execute";
-import type { SearchResult, ResearchResult, CodeResult } from "../core/types";
+import { generateText } from "ai";
+import { getModel } from "../core/provider.js";
+import { searchMultiQuery } from "./web-search.js";
+import { scrapeUrls } from "./web-scrape.js";
+import { executeCode } from "./code-execute.js";
+import type { SearchResult, ResearchResult, CodeResult } from "../core/types.js";
+
+interface ResearchPlanResult {
+  plan: Array<{ title: string; queries: string[] }>;
+  urlsToRead?: string[];
+  codeTask?: string;
+}
 
 export async function extremeSearch(prompt: string): Promise<ResearchResult> {
   const codeResults: CodeResult[] = [];
 
-  const { object: planResult } = await generateObject({
+  const { text: planText } = await generateText({
     model: getModel(),
-    schema: z.object({
-      plan: z
-        .array(
-          z.object({
-            title: z.string().describe("Research aspect title"),
-            queries: z
-              .array(z.string())
-              .min(2)
-              .max(3)
-              .describe("Specific search queries for this aspect"),
-          })
-        )
-        .min(2)
-        .max(3),
-      urlsToRead: z
-        .array(z.string().url())
-        .max(3)
-        .optional()
-        .describe("Specific URLs to read if the user mentioned any"),
-      codeTask: z
-        .string()
-        .optional()
-        .describe(
-          "Python code to run for data analysis, only if calculations are needed"
-        ),
-    }),
     prompt: `Plan focused research for: ${prompt}
 
 Today's Date: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "2-digit" })}
+
+You MUST respond with ONLY a valid JSON object (no markdown, no explanation) matching this structure:
+{
+  "plan": [
+    { "title": "Research aspect title", "queries": ["query1", "query2"] }
+  ],
+  "urlsToRead": ["url1"],
+  "codeTask": "python code if needed"
+}
 
 Guidelines:
 - Break into 2-3 key research aspects
@@ -47,11 +35,16 @@ Guidelines:
 - Include temporal context when relevant ("2025", "latest", "current")
 - Total queries should be 4-9
 - Only include codeTask if data analysis or calculations are truly needed
-- Only include urlsToRead if the user specified specific URLs`,
+- Only include urlsToRead if the user specified specific URLs
+- Respond with ONLY the JSON object, nothing else`,
   });
 
+  const jsonMatch = planText.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("Failed to generate research plan: no JSON in response");
+  const planResult: ResearchPlanResult = JSON.parse(jsonMatch[0]);
+
   const plan = planResult.plan;
-  console.log("[ExtremeSearch] Plan:", JSON.stringify(plan, null, 2));
+  console.error("[ExtremeSearch] Plan:", JSON.stringify(plan, null, 2));
 
   const allQueries = plan.flatMap((p) => p.queries);
   const searchPromise = searchMultiQuery(allQueries);
@@ -103,7 +96,7 @@ Guidelines:
     .map((s) => s.url);
 
   if (urlsToAutoScrape.length > 0) {
-    console.log(`[ExtremeSearch] Auto-scraping ${urlsToAutoScrape.length} top results`);
+    console.error(`[ExtremeSearch] Auto-scraping ${urlsToAutoScrape.length} top results`);
     const autoScrapeResults = await scrapeUrls(urlsToAutoScrape);
     for (const result of autoScrapeResults) {
       if (result.success) {
@@ -122,7 +115,7 @@ Guidelines:
     return true;
   });
 
-  console.log(
+  console.error(
     `[ExtremeSearch] Complete: ${uniqueSources.length} sources, ${codeResults.length} code results`
   );
 
