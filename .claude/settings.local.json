@@ -18,7 +18,15 @@
       "Bash(for hash:*)",
       "Bash(npm audit:*)",
       "Bash(npm pack:*)",
-      "Bash(npm outdated:*)"
+      "Bash(npm outdated:*)",
+      "Bash(npm publish:*)",
+      "Bash(curl:*)",
+      "Bash(rm -rf /tmp/meta-surfer-real-test)",
+      "Bash(mkdir -p /tmp/meta-surfer-real-test)",
+      "Read(//tmp/**)",
+      "Bash(npm init:*)",
+      "Bash(cd:*)",
+      "Bash(docker inspect:*)"
     ]
   }
 }
